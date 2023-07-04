@@ -1,7 +1,15 @@
-import { LoaderArgs, json, redirect } from "@remix-run/cloudflare";
+import {
+  LoaderArgs,
+  V2_MetaArgs,
+  V2_MetaDescriptor,
+  V2_MetaFunction,
+  json,
+  redirect,
+} from "@remix-run/cloudflare";
 import { Outlet, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { TypographyH1 } from "~/components/ui/typography";
+import DATA from "~/constants/data";
 import getDB from "~/db";
 
 export async function loader({ context, params: { slug } }: LoaderArgs) {
@@ -35,6 +43,10 @@ export async function loader({ context, params: { slug } }: LoaderArgs) {
     summary,
   });
 }
+
+export const meta: V2_MetaFunction = ({ data }) => {
+  return [{ title: `${data?.summary.name} - ${DATA.APP_TITLE}` }];
+};
 
 export default function BoardWithSlug() {
   const { summary } = useLoaderData<typeof loader>();
