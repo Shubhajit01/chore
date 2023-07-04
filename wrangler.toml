@@ -1,0 +1,7 @@
+name = "chore"
+compatibility_flags = [ "nodejs_compat" ]
+ 
+[[ d1_databases ]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "chore-db"
+database_id = "ede21cf7-2526-409b-add5-bf40ec72f23a"
