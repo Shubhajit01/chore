@@ -32,12 +32,12 @@ export default function BoardLayout() {
 
   return (
     <main className="flex min-h-screen w-screen flex-col lg:h-screen lg:flex-row">
-      <aside className="hidden lg:flex w-20 pt-10 pb-6 flex-col bg-black/30">
+      <aside className="hidden lg:flex w-20 pt-11 pb-6 flex-col bg-black/30">
         <div className="px-6 grow-0">
           <img src="/icon-logo.svg" />
         </div>
 
-        <ul className="flex flex-col grow items-center gap-5 mt-10 text-slate-400">
+        <ul className="flex flex-col grow items-center gap-5 mt-10 text-slate-500">
           {navLinks.map((link) => (
             <li key={link.to} className="w-full">
               <NavLink
