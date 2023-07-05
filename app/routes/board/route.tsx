@@ -1,7 +1,7 @@
 import { LoaderArgs, json } from "@remix-run/cloudflare";
 import { NavLink, Outlet, useLoaderData } from "@remix-run/react";
 import { HomeIcon, KanbanIcon, LogOutIcon } from "lucide-react";
-import { TypographyH4 } from "~/components/ui/typography";
+import { TypographyH4, TypographyH5 } from "~/components/ui/typography";
 import getDB from "~/db";
 import { cn } from "~/lib/utils";
 
@@ -61,9 +61,9 @@ export default function BoardLayout() {
 
       <div className="hidden w-[18rem] shrink-0 overflow-hidden border-r border-gray-800/40 bg-black/10 py-6 px-8 duration-100 lg:block">
         <div className="mt-5 mb-3">
-          <TypographyH4>
+          <TypographyH5>
             Boards (<span>{boards.length}/10</span>)
-          </TypographyH4>
+          </TypographyH5>
         </div>
 
         <nav>

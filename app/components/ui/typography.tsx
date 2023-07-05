@@ -55,6 +55,24 @@ export function TypographyH4({
   );
 }
 
+export function TypographyH5({
+  className,
+  children,
+  ...props
+}: ComponentProps<"h5">) {
+  return (
+    <h5
+      {...props}
+      className={cn(
+        "scroll-m-20 text-lg font-semibold tracking-tight",
+        className
+      )}
+    >
+      {children}
+    </h5>
+  );
+}
+
 export function TypographySmall({
   className,
   children,
