@@ -1,7 +1,7 @@
 import { LoaderArgs, json } from "@remix-run/cloudflare";
 import { NavLink, Outlet, useLoaderData } from "@remix-run/react";
-import { HomeIcon, KanbanIcon, LogOutIcon } from "lucide-react";
-import { TypographyH4, TypographyH5 } from "~/components/ui/typography";
+import { HomeIcon, KanbanIcon, LogOutIcon, UserCircle } from "lucide-react";
+import { TypographyH5 } from "~/components/ui/typography";
 import getDB from "~/db";
 import { cn } from "~/lib/utils";
 
@@ -28,31 +28,40 @@ export default function BoardLayout() {
   const navLinks = [
     { label: "Home", icon: HomeIcon, to: "/" },
     { label: "Boards", icon: KanbanIcon, to: "/board" },
+    { label: "Profile", icon: UserCircle, to: "/me" },
   ];
 
   return (
     <main className="flex min-h-screen w-screen flex-col lg:h-screen lg:flex-row">
       <aside className="hidden lg:flex w-20 pt-11 pb-6 flex-col bg-black/30">
         <div className="px-6 grow-0">
-          <img src="/icon-logo.svg" />
+          <img
+            src="/icon-logo.svg"
+            width="30"
+            height="27"
+            alt="A slanted grid symbol is displayed on the left side, featuring three columns with sky, white, and sky background colors respectively."
+          />
         </div>
 
-        <ul className="flex flex-col grow items-center gap-5 mt-10 text-slate-500">
+        <ul className="flex flex-col grow items-center gap-5 mt-10">
           {navLinks.map((link) => (
             <li key={link.to} className="w-full">
               <NavLink
                 to={link.to}
-                className="flex flex-col w-full gap-1 items-center"
+                className={({ isActive }) =>
+                  cn(
+                    "flex flex-col w-full gap-1 items-center",
+                    isActive ? "text-white" : "text-slate-500"
+                  )
+                }
               >
                 <link.icon className="w-6 h-6" />
-                <small className="text-xs font-medium text-slate-500">
-                  {link.label}
-                </small>
+                <small className="text-xs font-medium">{link.label}</small>
               </NavLink>
             </li>
           ))}
 
-          <li className="mt-auto flex w-full flex-col gap-1 items-center">
+          <li className="mt-auto flex w-full flex-col gap-1 items-center text-rose-400">
             <LogOutIcon className="w-6 h-6" />
             <small className="text-xs font-medium">Logout</small>
           </li>

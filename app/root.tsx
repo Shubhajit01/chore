@@ -9,8 +9,8 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
-import styles from "./globals.css";
 import interFont from "@fontsource-variable/inter/index.css";
+import styles from "./globals.css";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },

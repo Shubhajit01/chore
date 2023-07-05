@@ -45,7 +45,7 @@ export async function loader({ context, params: { slug } }: LoaderArgs) {
 }
 
 export const meta: V2_MetaFunction = ({ data }) => {
-  return [{ title: `${data?.summary.name} - ${DATA.APP_TITLE}` }];
+  return [{ title: `${data?.summary.name} - ${DATA.APP_TITLE}` }, ];
 };
 
 export default function BoardWithSlug() {

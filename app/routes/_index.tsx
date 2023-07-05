@@ -1,11 +1,10 @@
-import type { V2_MetaFunction } from "@remix-run/cloudflare";
+import { V2_MetaFunction } from "@remix-run/cloudflare";
+import DATA from "~/constants/data";
 
-export const meta: V2_MetaFunction = () => {
-  return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
-  ];
-};
+export const meta: V2_MetaFunction = () => [
+  { title: DATA.APP_TITLE },
+  { name: "description", content: DATA.APP_DESCRIPTION },
+];
 
 export default function Index() {
   return (
