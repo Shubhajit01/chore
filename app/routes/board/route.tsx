@@ -1,6 +1,7 @@
 import { LoaderArgs, json } from "@remix-run/cloudflare";
-import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
-import { TypographySmall } from "~/components/ui/typography";
+import { NavLink, Outlet, useLoaderData } from "@remix-run/react";
+import { HomeIcon, KanbanIcon, LogOutIcon } from "lucide-react";
+import { TypographyH4 } from "~/components/ui/typography";
 import getDB from "~/db";
 import { cn } from "~/lib/utils";
 
@@ -24,17 +25,45 @@ export async function loader({ context }: LoaderArgs) {
 export default function BoardLayout() {
   const { boards } = useLoaderData<typeof loader>();
 
+  const navLinks = [
+    { label: "Home", icon: HomeIcon, to: "/" },
+    { label: "Boards", icon: KanbanIcon, to: "/board" },
+  ];
+
   return (
     <main className="flex min-h-screen w-screen flex-col lg:h-screen lg:flex-row">
-      <div className="hidden w-full max-w-[18rem] shrink-0 overflow-hidden border-r border-gray-800/40 bg-black/10 p-6 duration-100 lg:block">
-        <Link to="/" aria-label="Go to homepage">
-          <img src="/logo.svg" alt="" width="125" height="43" />
-        </Link>
+      <aside className="hidden lg:flex w-20 pt-10 pb-6 flex-col bg-black/30">
+        <div className="px-6 grow-0">
+          <img src="/icon-logo.svg" />
+        </div>
 
-        <div className="mb-2 mt-8 block">
-          <small className="text-xs font-semibold uppercase leading-none text-slate-400">
+        <ul className="flex flex-col grow items-center gap-5 mt-10 text-slate-400">
+          {navLinks.map((link) => (
+            <li key={link.to} className="w-full">
+              <NavLink
+                to={link.to}
+                className="flex flex-col w-full gap-1 items-center"
+              >
+                <link.icon className="w-6 h-6" />
+                <small className="text-xs font-medium text-slate-500">
+                  {link.label}
+                </small>
+              </NavLink>
+            </li>
+          ))}
+
+          <li className="mt-auto flex w-full flex-col gap-1 items-center">
+            <LogOutIcon className="w-6 h-6" />
+            <small className="text-xs font-medium">Logout</small>
+          </li>
+        </ul>
+      </aside>
+
+      <div className="hidden w-[18rem] shrink-0 overflow-hidden border-r border-gray-800/40 bg-black/10 py-6 px-8 duration-100 lg:block">
+        <div className="mt-5 mb-3">
+          <TypographyH4>
             Boards (<span>{boards.length}/10</span>)
-          </small>
+          </TypographyH4>
         </div>
 
         <nav>

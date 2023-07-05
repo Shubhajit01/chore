@@ -7,6 +7,8 @@ import getDB from "~/db";
 import { relative } from "~/lib/day";
 import LaneItem from "./lane-item";
 
+import Color from "color";
+
 export async function loader({ context, params: { slug } }: LoaderArgs) {
   const db = getDB(context.env.DB);
 
@@ -73,16 +75,20 @@ export default function BoardWithSlug() {
         {(list) => (
           <>
             {list.states.map((state) => (
-              <li key={state.id} className="w-full max-w-xs shrink-0 py-2">
-                <div>
-                  <TypographySmall>{state.name}</TypographySmall>
+              <li
+                key={state.id}
+                className="w-full max-w-xs shrink-0 py-2"
+                style={{ "--theme": state.theme } as any}
+              >
+                <div className="flex items-center gap-2">
+                  <div className="rounded-full w-2 h-2 bg-[--theme]" />
+                  <TypographySmall className="text-white">
+                    {state.name}
+                  </TypographySmall>
                 </div>
 
-                <div className="relative mt-2">
-                  <ul
-                    className="single-lane group space-y-4"
-                    style={{ "--theme": state.theme } as any}
-                  >
+                <div className="relative mt-4">
+                  <ul className="single-lane group space-y-4">
                     {state.tasks.map((task) => (
                       <LaneItem
                         key={task.id}
