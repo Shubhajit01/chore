@@ -1,6 +1,7 @@
 import { LoaderArgs, json } from "@remix-run/cloudflare";
 import { NavLink, Outlet, useLoaderData } from "@remix-run/react";
-import { HomeIcon, KanbanIcon, LogOutIcon, UserCircle } from "lucide-react";
+import { KanbanIcon, LogOutIcon, UserCircle } from "lucide-react";
+import { BiHomeAlt2 } from "react-icons/bi";
 import { TypographyH5 } from "~/components/ui/typography";
 import getDB from "~/db";
 import { cn } from "~/lib/utils";
@@ -26,7 +27,7 @@ export default function BoardLayout() {
   const { boards } = useLoaderData<typeof loader>();
 
   const navLinks = [
-    { label: "Home", icon: HomeIcon, to: "/" },
+    { label: "Home", icon: BiHomeAlt2, to: "/" },
     { label: "Boards", icon: KanbanIcon, to: "/board" },
     { label: "Profile", icon: UserCircle, to: "/me" },
   ];
@@ -50,7 +51,7 @@ export default function BoardLayout() {
                 to={link.to}
                 className={({ isActive }) =>
                   cn(
-                    "flex flex-col w-full gap-1 items-center",
+                    "flex flex-col w-full gap-0.5 items-center",
                     isActive ? "text-white" : "text-slate-500"
                   )
                 }
@@ -61,7 +62,7 @@ export default function BoardLayout() {
             </li>
           ))}
 
-          <li className="mt-auto flex w-full flex-col gap-1 items-center text-rose-400">
+          <li className="mt-auto flex w-full flex-col gap-0.5 items-center text-rose-400">
             <LogOutIcon className="w-6 h-6" />
             <small className="text-xs font-medium">Logout</small>
           </li>
