@@ -8,6 +8,7 @@ import { relative } from "~/lib/day";
 import LaneItem from "./lane-item";
 
 import Color from "color";
+import { Button } from "~/components/ui/button";
 
 export async function loader({ context, params: { slug } }: LoaderArgs) {
   const db = getDB(context.env.DB);

@@ -10,11 +10,13 @@ import {
 } from "@remix-run/react";
 
 import interFont from "@fontsource-variable/inter/index.css";
+import interFontFile from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2";
 import styles from "./globals.css";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },
   { rel: "stylesheet", href: interFont },
+  { rel: "preload", href: interFontFile, as: "font" },
 
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];

@@ -1,5 +1,7 @@
 import { LoaderArgs, V2_MetaFunction, json } from "@remix-run/cloudflare";
 import { NavLink, Outlet, useLoaderData } from "@remix-run/react";
+import { PlusIcon } from "lucide-react";
+import { Button } from "~/components/ui/button";
 import { TypographyH5 } from "~/components/ui/typography";
 import DATA from "~/constants/data";
 import getDB from "~/db";
@@ -60,6 +62,12 @@ export default function BoardLayout() {
             })}
           </ul>
         </nav>
+
+        <div className="mt-8">
+          <Button variant="secondary" size="sm">
+            <PlusIcon className="w-5 h-5 mr-1" /> Add another board
+          </Button>
+        </div>
       </div>
       <Outlet />
     </>
