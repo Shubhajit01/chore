@@ -11,6 +11,7 @@ import { Button } from "~/components/ui/button";
 import { TypographyH1 } from "~/components/ui/typography";
 import DATA from "~/constants/data";
 import getDB from "~/db";
+import { NewStage } from "../api.stage.new";
 
 export async function loader({ context, params: { slug } }: LoaderArgs) {
   const db = await getDB(context.env.DB);
@@ -59,9 +60,7 @@ export default function BoardWithSlug() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button variant="secondary">
-            <PlusIcon className="w-5 h-5 mr-1" /> Add Stage
-          </Button>
+          <NewStage boardId={summary.id} />
 
           <Button>Add Task</Button>
         </div>
