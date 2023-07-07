@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ActionArgs, json, redirect } from "@remix-run/cloudflare";
+import { ActionArgs, json } from "@remix-run/cloudflare";
 import { useFetcher } from "@remix-run/react";
 import { eq } from "drizzle-orm";
 import { PlusIcon } from "lucide-react";
@@ -8,6 +8,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "~/components/ui/button";
+import ColorInput from "~/components/ui/color-input";
 import {
   FormControl,
   FormField,
@@ -30,17 +31,16 @@ import DATA from "~/constants/data";
 import getDB from "~/db";
 import { boards } from "~/db/schema/boards";
 import { states } from "~/db/schema/states";
-import { slugit } from "~/lib/utils";
+import useClearForm from "~/hooks/use-clear-form";
 
 const newStageSchema = z.object({
   boardId: z.string().nonempty({ message: "Stage must belong to a board." }),
   name: z.string().nonempty({ message: "Stage name cannot be empty." }),
-  theme: z.string().nonempty({ message: "Stage needs to have a theme color." }),
-  isFinal: z
-    .enum(["on", "off"])
-    .optional()
-    .default("off")
-    .transform((value) => value === "on"),
+  theme: z
+    .string()
+    .nonempty({ message: "Stage needs to have a theme color." })
+    .transform((t) => (t.startsWith("#") ? t : `#${t}`)),
+  isFinal: z.boolean().default(false),
 });
 
 type NewBoardFormValues = z.infer<typeof newStageSchema>;
@@ -90,32 +90,22 @@ export function NewStage({ boardId }: NewStageProps) {
   const [open, setOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<typeof action>();
 
   const form = useForm<NewBoardFormValues>({
     resolver: zodResolver(newStageSchema),
-    defaultValues: { name: "", theme: "#ffffff", isFinal: false },
+    defaultValues: { name: "", theme: "#7efbbb", isFinal: false, boardId },
   });
 
-  useEffect(() => {
-    let timer: number | undefined;
-
-    if (!open) {
-      timer = window.setTimeout(() => form.reset(), 300);
-    }
-
-    return () => {
-      if (timer) {
-        window.clearTimeout(timer);
-      }
-    };
-  }, [open]);
+  useClearForm({ open, form });
 
   useEffect(() => {
-    if (fetcher.state === "idle") {
+    if (fetcher.data?.ok) {
       setOpen(false);
     }
-  }, [fetcher.state]);
+  }, [fetcher.data]);
+
+  console.log(form.formState.errors);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -139,6 +129,8 @@ export function NewStage({ boardId }: NewStageProps) {
             ref={formRef}
             onSubmit={form.handleSubmit(() => fetcher.submit(formRef.current))}
           >
+            <input type="hidden" {...form.register("boardId")} readOnly />
+
             <FormField
               control={form.control}
               name="name"
@@ -155,17 +147,38 @@ export function NewStage({ boardId }: NewStageProps) {
 
             <FormField
               control={form.control}
+              name="theme"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="w-full">
+                    Choose a color to represent the stage
+                  </FormLabel>
+                  <FormControl>
+                    <ColorInput
+                      name={field.name}
+                      color={field.value}
+                      onColorChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="isFinal"
               render={({ field }) => (
-                <FormItem className="flex items-center gap-2">
+                <FormItem className="grid grid-cols-[44px_1fr] gap-2">
                   <FormControl>
                     <Switch
+                      name={field.name}
                       checked={field.value}
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormLabel>Mark as final stage</FormLabel>
-                  <FormMessage />
+                  <FormLabel className="w-full">Mark as final stage</FormLabel>
+                  <FormMessage className="col-span-2" />
                 </FormItem>
               )}
             />

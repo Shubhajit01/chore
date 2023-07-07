@@ -27,6 +27,7 @@ import {
 import DATA from "~/constants/data";
 import getDB from "~/db";
 import { boards } from "~/db/schema/boards";
+import useClearForm from "~/hooks/use-clear-form";
 import { slugit } from "~/lib/utils";
 
 const newBoardSchema = z.object({
@@ -73,19 +74,7 @@ export function NewBoard() {
     defaultValues: { name: "" },
   });
 
-  useEffect(() => {
-    let timer: number | undefined;
-
-    if (!open) {
-      timer = window.setTimeout(() => form.reset(), 300);
-    }
-
-    return () => {
-      if (timer) {
-        window.clearTimeout(timer);
-      }
-    };
-  }, [open]);
+  useClearForm<NewBoardFormValues>({ open, form });
 
   useEffect(() => {
     if (fetcher.state === "idle") {
