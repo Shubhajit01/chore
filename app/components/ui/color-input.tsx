@@ -34,7 +34,7 @@ export default forwardRef<HTMLInputElement, ButtonProps>(function ColorInput(
           className="absolute left-2.5 top-2/4 -translate-y-2/4 w-6 h-6 rounded"
           style={{ backgroundColor: currentValue }}
         />
-        <PopoverContent className="space-y-4 w-[14.5rem]">
+        <PopoverContent sideOffset={14} className="space-y-4 w-[14.5rem]">
           <HexColorPicker
             className="w-full"
             color={currentValue}
@@ -46,7 +46,7 @@ export default forwardRef<HTMLInputElement, ButtonProps>(function ColorInput(
       <HexColorInput
         {...props}
         className={cn(inputClass, "pl-11 max-w-[8rem]")}
-        placeholder='say "ffffff" without the "#"'
+        placeholder="ffffff"
         color={currentValue}
         onChange={setCurrentValue}
       />
