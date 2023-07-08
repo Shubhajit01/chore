@@ -12,6 +12,7 @@ import { TypographyH1 } from "~/components/ui/typography";
 import DATA from "~/constants/data";
 import getDB from "~/db";
 import { NewStage } from "../api.stage.new";
+import { NewTask } from "../api.task.new";
 
 export async function loader({ context, params: { slug } }: LoaderArgs) {
   const db = await getDB(context.env.DB);
@@ -61,8 +62,12 @@ export default function BoardWithSlug() {
 
         <div className="flex items-center gap-4">
           <NewStage boardId={summary.id} />
-
-          <Button>Add Task</Button>
+          <NewTask
+            stateItems={summary.states.map((state) => ({
+              label: state.name,
+              value: state.id,
+            }))}
+          />
         </div>
       </header>
 
