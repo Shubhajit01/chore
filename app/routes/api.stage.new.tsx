@@ -41,7 +41,11 @@ const newStageSchema = z.object({
     .string()
     .nonempty({ message: "Stage needs to have a theme color." })
     .transform((t) => (t.startsWith("#") ? t : `#${t}`)),
-  isFinal: z.boolean().default(false),
+  isFinal: z
+    .enum(["on", "off"])
+    .default("off")
+    .transform((val) => val === "on")
+    .or(z.boolean()),
 });
 
 type NewBoardFormValues = z.infer<typeof newStageSchema>;
