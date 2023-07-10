@@ -24,6 +24,7 @@ import {
   SheetTrigger,
 } from "~/components/ui/sheet";
 
+import { LoadingIcon } from "~/components/loaders/circle";
 import DATA from "~/constants/data";
 import getDB from "~/db";
 import { boards } from "~/db/schema/boards";
@@ -68,6 +69,7 @@ export function NewBoard() {
   const formRef = useRef<HTMLFormElement>(null);
 
   const fetcher = useFetcher();
+  const busy = fetcher.state !== "idle";
 
   const form = useForm<NewBoardFormValues>({
     resolver: zodResolver(newBoardSchema),
@@ -111,15 +113,21 @@ export function NewBoard() {
                 <FormItem>
                   <FormLabel>Board name</FormLabel>
                   <FormControl>
-                    <Input placeholder='say "my next big project"' {...field} />
+                    <Input
+                      placeholder='say "my next big project"'
+                      {...field}
+                      disabled={busy}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <div className="w-full flex justify-end mt-3 ml-auto">
-              <Button type="submit" size="sm">
-                Submit
+            <div className="w-full flex justify-end items-center mt-3 ml-auto gap-4">
+              {busy ? <LoadingIcon className="w-6 h-6" /> : null}
+
+              <Button type="submit" size="sm" disabled={busy}>
+                Create
               </Button>
             </div>
           </fetcher.Form>

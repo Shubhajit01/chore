@@ -32,6 +32,7 @@ import getDB from "~/db";
 import { boards } from "~/db/schema/boards";
 import { states } from "~/db/schema/states";
 import useClearForm from "~/hooks/use-clear-form";
+import { LoadingIcon } from "~/components/loaders/circle";
 
 const newStageSchema = z.object({
   boardId: z.string().nonempty({ message: "Stage must belong to a board." }),
@@ -105,7 +106,7 @@ export function NewStage({ boardId }: NewStageProps) {
     }
   }, [fetcher.data]);
 
-  console.log(form.formState.errors);
+  const busy = fetcher.state !== "idle";
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -183,9 +184,11 @@ export function NewStage({ boardId }: NewStageProps) {
               )}
             />
 
-            <div className="w-full flex justify-end mt-3 ml-auto">
-              <Button type="submit" size="sm">
-                Submit
+            <div className="w-full flex justify-end items-center mt-3 ml-auto gap-4">
+              {busy ? <LoadingIcon className="w-6 h-6" /> : null}
+
+              <Button type="submit" size="sm" disabled={busy}>
+                Create
               </Button>
             </div>
           </fetcher.Form>

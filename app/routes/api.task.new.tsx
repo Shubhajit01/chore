@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { LoadingIcon } from "~/components/loaders/circle";
+
 import { Button } from "~/components/ui/button";
 import {
   FormControl,
@@ -30,7 +32,6 @@ import {
   SheetTrigger,
 } from "~/components/ui/sheet";
 import { Textarea } from "~/components/ui/textarea";
-
 import DATA from "~/constants/data";
 import getDB from "~/db";
 import { tasks } from "~/db/schema/tasks";
@@ -98,6 +99,8 @@ export function NewTask({ stateItems }: NewTaskProps) {
       setOpen(false);
     }
   }, [fetcher.state]);
+
+  const busy = fetcher.state !== "idle";
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -184,9 +187,11 @@ export function NewTask({ stateItems }: NewTaskProps) {
               )}
             />
 
-            <div className="w-full flex justify-end mt-3 ml-auto">
-              <Button type="submit" size="sm">
-                Submit
+            <div className="w-full flex justify-end items-center mt-3 ml-auto gap-4">
+              {busy ? <LoadingIcon className="w-6 h-6" /> : null}
+
+              <Button type="submit" size="sm" disabled={busy}>
+                Create
               </Button>
             </div>
           </fetcher.Form>
