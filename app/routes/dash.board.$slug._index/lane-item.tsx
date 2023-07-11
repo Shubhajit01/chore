@@ -1,8 +1,10 @@
+import { useDraggable } from "@dnd-kit/core";
 import { SerializeFrom } from "@remix-run/cloudflare";
+import { motion } from "framer-motion";
 import { HistoryIcon } from "lucide-react";
+import { LoadingIcon } from "~/components/loaders/circle";
 import { cn } from "~/lib/utils";
 import { loader } from "./route";
-import { LoadingIcon } from "~/components/loaders/circle";
 
 type LaneItemProps = {
   task: Awaited<
@@ -11,31 +13,43 @@ type LaneItemProps = {
   laneId: string;
   final?: boolean;
   saving?: boolean;
-  dragging?: boolean;
 };
 
 export default function LaneItem({
   laneId,
   task,
-  dragging,
   final,
   saving,
 }: LaneItemProps) {
+  const { listeners, isDragging, setNodeRef, attributes, transform } =
+    useDraggable({
+      id: task.id,
+      data: {
+        task,
+        laneId,
+      },
+    });
+
+  const dx = transform?.x ?? 0;
+  const dy = transform?.y ?? 0;
+
   return (
     <li className="group/item relative">
-      <div
-        role="button"
-        tabIndex={0}
+      <motion.div
+        style={{ x: dx, y: dy }}
+        ref={setNodeRef}
         className={cn(
           "peer relative flex flex-col gap-1 border-2 border-white/5 border-l-[--theme] p-4 outline-none",
           final && "line-through",
           saving && "cursor-wait select-none",
-          dragging &&
+          isDragging &&
             "relative z-20 translate-x-[--x] translate-y-[--y] transform-gpu cursor-grabbing select-none backdrop-blur-md backdrop-brightness-50",
           !saving &&
-            !dragging &&
+            !isDragging &&
             "cursor-grab transition-transform duration-200"
         )}
+        {...listeners}
+        {...attributes}
       >
         <div className="w-10/12 truncate font-medium">{task.title}</div>
         <div className="flex items-center gap-2 text-sm text-slate-300">
@@ -46,7 +60,7 @@ export default function LaneItem({
         {saving ? (
           <LoadingIcon className="absolute right-4 top-[1.1rem] h-6 w-6" />
         ) : null}
-      </div>
+      </motion.div>
     </li>
   );
 }

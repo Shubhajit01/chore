@@ -1,5 +1,11 @@
-import { LoaderArgs, defer, redirect } from "@remix-run/cloudflare";
-import { Await, useLoaderData } from "@remix-run/react";
+import {
+  ActionArgs,
+  LoaderArgs,
+  defer,
+  json,
+  redirect,
+} from "@remix-run/cloudflare";
+import { Await, useLoaderData, useSubmit } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
 import { TypographySmall } from "~/components/ui/typography";
@@ -7,8 +13,12 @@ import getDB from "~/db";
 import { relative } from "~/lib/day";
 import LaneItem from "./lane-item";
 
-import Color from "color";
-import { Button } from "~/components/ui/button";
+import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { eq } from "drizzle-orm";
+import { z } from "zod";
+import { boards } from "~/db/schema/boards";
+import { tasks } from "~/db/schema/tasks";
+import Lane from "./lane";
 
 export async function loader({ context, params: { slug } }: LoaderArgs) {
   const db = getDB(context.env.DB);
@@ -67,14 +77,76 @@ async function getBoard(db: ReturnType<typeof getDB>, slug: string) {
   };
 }
 
+export async function action({ request, context }: ActionArgs) {
+  const form = await request.formData();
+  const result = await z
+    .object({
+      id: z.string(),
+      state: z.string(),
+      board: z.string(),
+    })
+    .safeParseAsync(Object.fromEntries(form));
+
+  if (!result.success) {
+    return json(
+      { ok: false, errors: result.error.formErrors.fieldErrors },
+      400
+    );
+  }
+
+  const { id, state, board } = result.data;
+
+  const db = getDB(context.env.DB);
+
+  await Promise.all([
+    db
+      .update(tasks)
+      .set({
+        stateId: state,
+        updatedAt: new Date(),
+      })
+      .where(eq(tasks.id, id))
+      .run(),
+    db
+      .update(boards)
+      .set({ updatedAt: new Date() })
+      .where(eq(boards.slug, board))
+      .run(),
+  ]);
+
+  return { ok: true, errors: null };
+}
+
 export default function BoardWithSlug() {
   const { board } = useLoaderData<typeof loader>();
+
+  const submit = useSubmit();
+
+  const onDrop = (ev: DragEndEvent, slug: string) => {
+    const active = ev.active.data.current;
+    const target = ev.over?.id;
+
+    if (!active || !target) {
+      return;
+    }
+
+    const { task, laneId } = active;
+
+    submit(
+      {
+        id: task.id,
+        state: target,
+        board: slug,
+      },
+      { method: "POST" }
+    );
+  };
 
   return (
     <ul className="flex gap-8 px-8 py-2 mt-32 lg:mt-0">
       <Await resolve={board}>
         {(list) => (
-          <>
+          <DndContext onDragEnd={(e) => onDrop(e, list.slug)}>
             {list.states.map((state) => (
               <li
                 key={state.id}
@@ -89,7 +161,7 @@ export default function BoardWithSlug() {
                 </div>
 
                 <div className="relative mt-4">
-                  <ul className="single-lane group space-y-4">
+                  <Lane id={state.id}>
                     {state.tasks.map((task) => (
                       <LaneItem
                         key={task.id}
@@ -98,11 +170,11 @@ export default function BoardWithSlug() {
                         final={!!state.isFinal}
                       />
                     ))}
-                  </ul>
+                  </Lane>
                 </div>
               </li>
             ))}
-          </>
+          </DndContext>
         )}
       </Await>
       <li className="h-px w-px shrink-0" />
