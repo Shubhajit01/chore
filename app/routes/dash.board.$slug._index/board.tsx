@@ -50,7 +50,7 @@ export default function Board({ data }: BoardProps) {
                 ...state.tasks,
               ]
             : state.id === laneId
-            ? state.tasks.filter((task) => task.id !== task.id)
+            ? state.tasks.filter((t) => t.id !== task.id)
             : state.tasks,
       }))
     );
