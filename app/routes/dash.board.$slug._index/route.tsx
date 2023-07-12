@@ -65,15 +65,17 @@ async function getBoard(db: ReturnType<typeof getDB>, slug: string) {
 
   return {
     ...board,
-    stages: board.stages.map((state) => ({
-      ...state,
-      tasks: state.tasks
-        .sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1))
-        .map((task) => ({
-          ...task,
-          updatedAt: relative(task.updatedAt),
-        })),
-    })),
+    stages: board.stages
+      .sort((a, b) => (Number(a.order) > Number(b.order) ? 1 : -1))
+      .map((state) => ({
+        ...state,
+        tasks: state.tasks
+          .sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1))
+          .map((task) => ({
+            ...task,
+            updatedAt: relative(task.updatedAt),
+          })),
+      })),
   };
 }
 

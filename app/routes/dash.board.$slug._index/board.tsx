@@ -6,7 +6,9 @@ import Lane from "./lane";
 import LaneItem from "./lane-item";
 
 import type { SerializeFrom } from "@remix-run/cloudflare";
+import { StateSwapButton } from "../api.state.reorder";
 import type { loader } from "./route";
+import { motion } from "framer-motion";
 
 export type BoardProps = {
   data: Awaited<SerializeFrom<typeof loader>["board"]>;
@@ -67,8 +69,9 @@ export default function Board({ data }: BoardProps) {
 
   return (
     <DndContext onDragEnd={onDrop}>
-      {lanes.map((state) => (
-        <li
+      {lanes.map((state, index) => (
+        <motion.li
+          layoutId={state.id}
           key={state.id}
           className="w-full max-w-xs shrink-0 py-2"
           style={{ "--theme": state.theme, order: state.order } as any}
@@ -78,9 +81,27 @@ export default function Board({ data }: BoardProps) {
             <TypographySmall className="text-white">
               {state.name}
             </TypographySmall>
+
+            <div className="flex items-center ml-auto">
+              {index !== 0 ? (
+                <StateSwapButton
+                  dir="left"
+                  items={[state.id, lanes[index - 1]?.id]}
+                  orders={[lanes[index - 1]?.order ?? 0, state.order ?? 0]}
+                />
+              ) : null}
+
+              {index !== lanes.length - 1 ? (
+                <StateSwapButton
+                  dir="right"
+                  items={[state.id, lanes[index + 1]?.id]}
+                  orders={[lanes[index + 1]?.order ?? 0, state.order ?? 0]}
+                />
+              ) : null}
+            </div>
           </div>
 
-          <div className="relative mt-4">
+          <div className="relative mt-2">
             <Lane id={state.id}>
               {state.tasks.map((task) => (
                 <LaneItem
@@ -93,7 +114,7 @@ export default function Board({ data }: BoardProps) {
               ))}
             </Lane>
           </div>
-        </li>
+        </motion.li>
       ))}
     </DndContext>
   );

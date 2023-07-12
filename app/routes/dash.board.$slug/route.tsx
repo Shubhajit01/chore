@@ -44,7 +44,7 @@ export async function loader({ context, params: { slug } }: LoaderArgs) {
     summary: {
       ...summary,
       stages: summary.stages.sort((a, b) =>
-        Number(a.order) < Number(b.order) ? 1 : -1
+        Number(a.order) > Number(b.order) ? 1 : -1
       ),
     },
   });
