@@ -17,12 +17,12 @@ export default function Board({ data }: BoardProps) {
 
   const { formData } = useNavigation();
 
-  const [lanes, setLanes] = useState<(typeof data)["states"]>(
-    data.states ?? []
+  const [lanes, setLanes] = useState<(typeof data)["stages"]>(
+    data.stages ?? []
   );
 
   useEffect(() => {
-    setLanes(data.states);
+    setLanes(data.stages);
   }, [data]);
 
   function onDrop(ev: DragEndEvent) {

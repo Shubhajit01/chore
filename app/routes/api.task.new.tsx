@@ -41,7 +41,7 @@ const newTaskSchema = z.object({
   title: z
     .string({ required_error: "Task title cannot be empty." })
     .nonempty({ message: "Task title cannot be empty." }),
-  stateId: z
+  stageId: z
     .string({ required_error: "Task must belong to a stage." })
     .nonempty({ message: "Stage id must be a proper id." }),
   description: z.string().optional(),
@@ -89,7 +89,7 @@ export function NewTask({ stateItems }: NewTaskProps) {
 
   const form = useForm<NewTaskFormValues>({
     resolver: zodResolver(newTaskSchema),
-    defaultValues: { title: "", stateId: stateItems[0]?.value },
+    defaultValues: { title: "", stageId: stateItems[0]?.value },
   });
 
   useClearForm<NewTaskFormValues>({ open, form });
@@ -110,8 +110,8 @@ export function NewTask({ stateItems }: NewTaskProps) {
 
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Create a new board</SheetTitle>
-          <SheetDescription>{DATA.BOARD_DESCRIPTION}</SheetDescription>
+          <SheetTitle>Create a new task</SheetTitle>
+          <SheetDescription>{DATA.TASK_DESCRIPTION}</SheetDescription>
         </SheetHeader>
 
         <FormProvider {...form}>
@@ -141,7 +141,7 @@ export function NewTask({ stateItems }: NewTaskProps) {
 
             <FormField
               control={form.control}
-              name="stateId"
+              name="stageId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Stage</FormLabel>

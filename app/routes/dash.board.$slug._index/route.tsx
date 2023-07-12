@@ -35,7 +35,7 @@ async function getBoard(db: ReturnType<typeof getDB>, slug: string) {
       slug: true,
     },
     with: {
-      states: {
+      stages: {
         columns: {
           id: true,
           name: true,
@@ -64,7 +64,7 @@ async function getBoard(db: ReturnType<typeof getDB>, slug: string) {
 
   return {
     ...board,
-    states: board.states.map((state) => ({
+    stages: board.stages.map((state) => ({
       ...state,
       tasks: state.tasks.map((task) => ({
         ...task,
@@ -99,7 +99,7 @@ export async function action({ request, context }: ActionArgs) {
     db
       .update(tasks)
       .set({
-        stateId: state,
+        stageId: state,
         updatedAt: new Date(),
       })
       .where(eq(tasks.id, id))

@@ -30,7 +30,7 @@ export async function loader({ context, params: { slug } }: LoaderArgs) {
       user: {
         columns: { email: true },
       },
-      states: {
+      stages: {
         columns: { name: true, id: true },
         orderBy: (state, { asc }) => asc(state.name),
       },
@@ -63,7 +63,7 @@ export default function BoardWithSlug() {
         <div className="flex items-center gap-4">
           <NewStage boardId={summary.id} />
           <NewTask
-            stateItems={summary.states.map((state) => ({
+            stateItems={summary.stages.map((state) => ({
               label: state.name,
               value: state.id,
             }))}

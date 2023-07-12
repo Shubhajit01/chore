@@ -8,7 +8,7 @@ import { cn } from "~/lib/utils";
 import { BoardProps } from "./board";
 
 type LaneItemProps = {
-  task: BoardProps["data"]["states"][number]["tasks"][number];
+  task: BoardProps["data"]["stages"][number]["tasks"][number];
   laneId: string;
   final?: boolean;
   saving?: boolean;
