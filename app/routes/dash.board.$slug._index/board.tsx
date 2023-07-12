@@ -71,7 +71,7 @@ export default function Board({ data }: BoardProps) {
         <li
           key={state.id}
           className="w-full max-w-xs shrink-0 py-2"
-          style={{ "--theme": state.theme } as any}
+          style={{ "--theme": state.theme, order: state.order } as any}
         >
           <div className="flex items-center gap-2">
             <div className="rounded-full w-2 h-2 bg-[--theme]" />

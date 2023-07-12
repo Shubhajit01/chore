@@ -36,13 +36,22 @@ export default function LaneItem({
 
   return (
     <motion.li
+      ref={setNodeRef}
       {...listeners}
       {...attributes}
       layoutId={task.id}
       style={{ x: dx, y: dy }}
-      ref={setNodeRef}
+      initial={{
+        borderColor: "rgb(255 255 255 / 0.05)",
+        borderLeftColor: "var(--theme)",
+      }}
+      whileFocus={{
+        scale: 1.1,
+        borderColor: "var(--theme)",
+        borderLeftColor: "var(--theme)",
+      }}
       className={cn(
-        "peer relative flex flex-col gap-1 border-2 border-white/5 border-l-[--theme] p-4 outline-none",
+        "peer relative flex flex-col gap-1 border-2 p-4 outline-none",
         final && "line-through",
         busy && "cursor-wait select-none",
         isDragging &&

@@ -38,6 +38,7 @@ async function getBoard(db: ReturnType<typeof getDB>, slug: string) {
       stages: {
         columns: {
           id: true,
+          order: true,
           name: true,
           theme: true,
           isFinal: true,
@@ -66,10 +67,12 @@ async function getBoard(db: ReturnType<typeof getDB>, slug: string) {
     ...board,
     stages: board.stages.map((state) => ({
       ...state,
-      tasks: state.tasks.map((task) => ({
-        ...task,
-        updatedAt: relative(task.updatedAt),
-      })),
+      tasks: state.tasks
+        .sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1))
+        .map((task) => ({
+          ...task,
+          updatedAt: relative(task.updatedAt),
+        })),
     })),
   };
 }

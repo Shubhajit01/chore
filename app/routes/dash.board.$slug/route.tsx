@@ -31,8 +31,7 @@ export async function loader({ context, params: { slug } }: LoaderArgs) {
         columns: { email: true },
       },
       stages: {
-        columns: { name: true, id: true },
-        orderBy: (state, { asc }) => asc(state.name),
+        columns: { name: true, id: true, order: true },
       },
     },
   });
@@ -42,7 +41,12 @@ export async function loader({ context, params: { slug } }: LoaderArgs) {
   }
 
   return json({
-    summary,
+    summary: {
+      ...summary,
+      stages: summary.stages.sort((a, b) =>
+        Number(a.order) < Number(b.order) ? 1 : -1
+      ),
+    },
   });
 }
 
