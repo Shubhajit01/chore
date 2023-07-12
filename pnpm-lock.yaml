@@ -82,6 +82,9 @@ dependencies:
   slugify:
     specifier: ^1.6.6
     version: 1.6.6
+  spin-delay:
+    specifier: ^1.2.0
+    version: 1.2.0(react@18.2.0)
   tailwind-merge:
     specifier: ^1.13.2
     version: 1.13.2
@@ -8696,6 +8699,14 @@ packages:
   /space-separated-tokens@2.0.2:
     resolution: {integrity: sha512-PEGlAwrG8yXGXRjW32fGbg66JAlOAwbObuqVoJpv/mRgoWDQfgH1wDPvtzWyUSNAXBGSk8h755YDbbcEy3SH2Q==}
     dev: true
+
+  /spin-delay@1.2.0(react@18.2.0):
+    resolution: {integrity: sha512-PkZl5FHWOMrwQgoWejG1hBkIlVx4KbdL/37RPr5/pGq5+NWcGx7NNDukFct2yr8yRZuvwEompNR/in9nWj4sTw==}
+    peerDependencies:
+      react: '>=17.0.1'
+    dependencies:
+      react: 18.2.0
+    dev: false
 
   /ssri@8.0.1:
     resolution: {integrity: sha512-97qShzy1AiyxvPNIkLWoGua7xoQzzPjQ0HAH4B0rWKo7SZ6USuPcrUiAFrws0UH8RrbWmgq3LMTObhPIHbbBeQ==}

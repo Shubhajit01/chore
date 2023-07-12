@@ -5,20 +5,17 @@ import {
   json,
   redirect,
 } from "@remix-run/cloudflare";
-import { Await, useLoaderData, useSubmit } from "@remix-run/react";
+import { Await, useLoaderData } from "@remix-run/react";
 import invariant from "tiny-invariant";
 
-import { TypographySmall } from "~/components/ui/typography";
 import getDB from "~/db";
 import { relative } from "~/lib/day";
-import LaneItem from "./lane-item";
 
-import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { boards } from "~/db/schema/boards";
 import { tasks } from "~/db/schema/tasks";
-import Lane from "./lane";
+import Board from "./board";
 
 export async function loader({ context, params: { slug } }: LoaderArgs) {
   const db = getDB(context.env.DB);
@@ -118,65 +115,11 @@ export async function action({ request, context }: ActionArgs) {
 }
 
 export default function BoardWithSlug() {
-  const { board } = useLoaderData<typeof loader>();
-
-  const submit = useSubmit();
-
-  const onDrop = (ev: DragEndEvent, slug: string) => {
-    const active = ev.active.data.current;
-    const target = ev.over?.id;
-
-    if (!active || !target) {
-      return;
-    }
-
-    const { task, laneId } = active;
-
-    submit(
-      {
-        id: task.id,
-        state: target,
-        board: slug,
-      },
-      { method: "POST" }
-    );
-  };
+  const { board: awaitableBoard } = useLoaderData<typeof loader>();
 
   return (
     <ul className="flex gap-8 px-8 py-2 mt-32 lg:mt-0">
-      <Await resolve={board}>
-        {(list) => (
-          <DndContext onDragEnd={(e) => onDrop(e, list.slug)}>
-            {list.states.map((state) => (
-              <li
-                key={state.id}
-                className="w-full max-w-xs shrink-0 py-2"
-                style={{ "--theme": state.theme } as any}
-              >
-                <div className="flex items-center gap-2">
-                  <div className="rounded-full w-2 h-2 bg-[--theme]" />
-                  <TypographySmall className="text-white">
-                    {state.name}
-                  </TypographySmall>
-                </div>
-
-                <div className="relative mt-4">
-                  <Lane id={state.id}>
-                    {state.tasks.map((task) => (
-                      <LaneItem
-                        key={task.id}
-                        laneId={state.id}
-                        task={task}
-                        final={!!state.isFinal}
-                      />
-                    ))}
-                  </Lane>
-                </div>
-              </li>
-            ))}
-          </DndContext>
-        )}
-      </Await>
+      <Await resolve={awaitableBoard}>{(list) => <Board data={list} />}</Await>
       <li className="h-px w-px shrink-0" />
     </ul>
   );
