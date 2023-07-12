@@ -6,7 +6,7 @@ import {
   uniqueIndex,
 } from "drizzle-orm/sqlite-core";
 import { users } from "./users";
-import { states } from "./states";
+import { stages } from "./stages";
 
 export const boards = sqliteTable(
   "boards",
@@ -31,7 +31,7 @@ export const boardsRelations = relations(boards, ({ one, many }) => ({
     fields: [boards.userId],
     references: [users.id],
   }),
-  states: many(states),
+  stages: many(stages),
 }));
 
 export type InsertBoard = InferModel<typeof boards, "insert">;

@@ -8,12 +8,13 @@ CREATE TABLE `boards` (
 	`updated_at` integer NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE `states` (
+CREATE TABLE `stages` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
 	`theme` text NOT NULL,
 	`is_final` integer DEFAULT false,
 	`board_id` text NOT NULL,
+	`order` integer DEFAULT 0,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL
 );
@@ -22,7 +23,7 @@ CREATE TABLE `tasks` (
 	`id` text PRIMARY KEY NOT NULL,
 	`title` text NOT NULL,
 	`description` text,
-	`state_id` text NOT NULL,
+	`stage_id` text NOT NULL,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL
 );

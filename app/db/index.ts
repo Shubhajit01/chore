@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/d1";
 
 import * as boards from "./schema/boards";
-import * as states from "./schema/states";
+import * as stages from "./schema/stages";
 import * as tasks from "./schema/tasks";
 import * as users from "./schema/users";
 
@@ -10,7 +10,7 @@ const getDB = (client: D1Database) => {
     schema: {
       ...users,
       ...boards,
-      ...states,
+      ...stages,
       ...tasks,
     },
   });

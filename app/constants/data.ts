@@ -6,9 +6,9 @@ const DATA = {
 		'A slanted grid symbol is displayed on the left side, featuring three columns with sky, white, and sky background colors respectively. The symbol is followed by the text "CHORE."',
 	BOARD_DESCRIPTION:
 		'A new board will let you to group your tasks together and keep them organized in our app.',
-	STATE_DESCRIPTION:
+	STAGE_DESCRIPTION:
 		'A state represents the current stage or status of a task. Each state reflects where a task stands in its lifecycle, guiding you through the workflow from planning to completion. By organizing your tasks into different states, you can easily prioritize and manage your workload effectively.',
-	STATE_DESCRIPTION_SMALL:
+	STAGE_DESCRIPTION_SMALL:
 		'Track task progress with states representing stages in the workflow. Organize tasks for effective workload management and prioritization.',
 	TASK_DESCRIPTION:
 		'Tasks help you break down your work, set priorities, and track progress. Stay organized and focused by adding tasks to your board.'

@@ -30,7 +30,7 @@ import { Switch } from "~/components/ui/switch";
 import DATA from "~/constants/data";
 import getDB from "~/db";
 import { boards } from "~/db/schema/boards";
-import { states } from "~/db/schema/states";
+import { stages } from "~/db/schema/stages";
 import useClearForm from "~/hooks/use-clear-form";
 import { LoadingIcon } from "~/components/loaders/circle";
 
@@ -68,7 +68,7 @@ export async function action({ request, context }: ActionArgs) {
 
   await Promise.all([
     db
-      .insert(states)
+      .insert(stages)
       .values({
         id: crypto.randomUUID(),
         name: result.data.name,
@@ -123,7 +123,7 @@ export function NewStage({ boardId }: NewStageProps) {
       <SheetContent>
         <SheetHeader>
           <SheetTitle>Create a new stage</SheetTitle>
-          <SheetDescription>{DATA.STATE_DESCRIPTION_SMALL}</SheetDescription>
+          <SheetDescription>{DATA.STAGE_DESCRIPTION_SMALL}</SheetDescription>
         </SheetHeader>
 
         <FormProvider {...form}>
