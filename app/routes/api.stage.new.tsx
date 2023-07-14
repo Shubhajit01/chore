@@ -1,203 +1,229 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ActionArgs, json } from "@remix-run/cloudflare";
-import { useFetcher } from "@remix-run/react";
-import { eq } from "drizzle-orm";
-import { PlusIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {ActionArgs, json} from "@remix-run/cloudflare";
+import {useFetcher} from "@remix-run/react";
+import {eq} from "drizzle-orm";
+import {PlusIcon} from "lucide-react";
+import {useEffect, useRef, useState} from "react";
+import {FormProvider, useForm} from "react-hook-form";
+import {z} from "zod";
 
-import { Button } from "~/components/ui/button";
+import {Button} from "~/components/ui/button";
 import ColorInput from "~/components/ui/color-input";
 import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
+import {Input} from "~/components/ui/input";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
 } from "~/components/ui/sheet";
-import { Switch } from "~/components/ui/switch";
+import {Switch} from "~/components/ui/switch";
 
 import DATA from "~/constants/data";
 import getDB from "~/db";
-import { boards } from "~/db/schema/boards";
-import { stages } from "~/db/schema/stages";
+import {boards} from "~/db/schema/boards";
+import {stages} from "~/db/schema/stages";
 import useClearForm from "~/hooks/use-clear-form";
-import { LoadingIcon } from "~/components/loaders/circle";
+import {LoadingIcon} from "~/components/loaders/circle";
 
 const newStageSchema = z.object({
-  boardId: z.string().nonempty({ message: "Stage must belong to a board." }),
-  name: z.string().nonempty({ message: "Stage name cannot be empty." }),
-  theme: z
-    .string()
-    .nonempty({ message: "Stage needs to have a theme color." })
-    .transform((t) => (t.startsWith("#") ? t : `#${t}`)),
-  isFinal: z
-    .enum(["on", "off"])
-    .default("off")
-    .transform((val) => val === "on")
-    .or(z.boolean()),
+    nextOrder: z.string().default("0"),
+    boardId: z.string().nonempty({message: "Stage must belong to a board."}),
+    name: z.string().nonempty({message: "Stage name cannot be empty."}),
+    theme: z
+        .string()
+        .nonempty({message: "Stage needs to have a theme color."})
+        .transform((t) => (t.startsWith("#") ? t : `#${t}`)),
+    isFinal: z
+        .enum(["on", "off"])
+        .default("off")
+        .transform((val) => val === "on")
+        .or(z.boolean()),
 });
 
 type NewBoardFormValues = z.infer<typeof newStageSchema>;
 
-export async function action({ request, context }: ActionArgs) {
-  const form = await request.formData();
+export async function action({request, context}: ActionArgs) {
+    const form = await request.formData();
 
-  const result = await newStageSchema.safeParseAsync(
-    Object.fromEntries(form.entries())
-  );
-
-  if (!result.success) {
-    return json(
-      { ok: false, errors: result.error.formErrors.fieldErrors },
-      400
+    const result = await newStageSchema.safeParseAsync(
+        Object.fromEntries(form.entries())
     );
-  }
 
-  const db = getDB(context.env.DB);
+    if (!result.success) {
+        return json(
+            {ok: false, errors: result.error.formErrors.fieldErrors},
+            400
+        );
+    }
 
-  await Promise.all([
-    db
-      .insert(stages)
-      .values({
-        id: crypto.randomUUID(),
-        name: result.data.name,
-        theme: result.data.theme,
-        isFinal: result.data.isFinal,
-        boardId: result.data.boardId,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      })
-      .get(),
+    const db = getDB(context.env.DB);
 
-    db
-      .update(boards)
-      .set({ updatedAt: new Date() })
-      .where(eq(boards.id, result.data.boardId))
-      .get(),
-  ]);
+    const board = await db.query.boards.findFirst({
+        where: (boards, {eq}) => eq(boards.id, result.data.boardId),
+        columns: {id: true},
+        with: {
+            stages: {
+                columns: {order: true}
+            }
+        }
+    });
 
-  return json({ ok: true, errors: null });
+    if (!board) {
+        return json({ok: false, errors: {form: 'Board Not found'}}, 400);
+    }
+
+    const maxOrder = board.stages.reduce((maxOrder, stage) => Math.max(maxOrder, stage.order ?? 0), 0);
+
+
+    await Promise.all([
+        db
+            .insert(stages)
+            .values({
+                id: crypto.randomUUID(),
+                name: result.data.name,
+                theme: result.data.theme,
+                order: maxOrder + 1,
+                isFinal: result.data.isFinal,
+                boardId: result.data.boardId,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            })
+            .get(),
+
+        db
+            .update(boards)
+            .set({updatedAt: new Date()})
+            .where(eq(boards.id, result.data.boardId))
+            .get(),
+    ]);
+
+    return json({ok: true, errors: null});
 }
 
 type NewStageProps = { boardId: string };
-export function NewStage({ boardId }: NewStageProps) {
-  const [open, setOpen] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
 
-  const fetcher = useFetcher<typeof action>();
+export function NewStage({boardId}: NewStageProps) {
+    const [open, setOpen] = useState(false);
+    const formRef = useRef<HTMLFormElement>(null);
 
-  const form = useForm<NewBoardFormValues>({
-    resolver: zodResolver(newStageSchema),
-    defaultValues: { name: "", theme: "#7efbbb", isFinal: false, boardId },
-  });
+    const fetcher = useFetcher<typeof action>();
 
-  useClearForm({ open, form });
+    const form = useForm<NewBoardFormValues>({
+        resolver: zodResolver(newStageSchema),
+        defaultValues: {
+            name: "",
+            theme: "#7efbbb",
+            isFinal: false,
+            boardId,
+        },
+    });
 
-  useEffect(() => {
-    if (fetcher.data?.ok) {
-      setOpen(false);
-    }
-  }, [fetcher.data]);
+    useClearForm({open, form});
 
-  const busy = fetcher.state !== "idle";
+    useEffect(() => {
+        if (fetcher.data?.ok) {
+            setOpen(false);
+        }
+    }, [fetcher.data]);
 
-  return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        <Button variant="secondary">
-          <PlusIcon className="w-5 h-5 mr-1" /> Add Stage
-        </Button>
-      </SheetTrigger>
+    const busy = fetcher.state !== "idle";
 
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Create a new stage</SheetTitle>
-          <SheetDescription>{DATA.STAGE_DESCRIPTION_SMALL}</SheetDescription>
-        </SheetHeader>
+    return (
+        <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+                <Button variant="secondary">
+                    <PlusIcon className="w-5 h-5 mr-1"/> Add Stage
+                </Button>
+            </SheetTrigger>
 
-        <FormProvider {...form}>
-          <fetcher.Form
-            className="mt-2 space-y-4"
-            method="POST"
-            action="/api/stage/new"
-            ref={formRef}
-            onSubmit={form.handleSubmit(() => fetcher.submit(formRef.current))}
-          >
-            <input type="hidden" {...form.register("boardId")} readOnly />
+            <SheetContent>
+                <SheetHeader>
+                    <SheetTitle>Create a new stage</SheetTitle>
+                    <SheetDescription>{DATA.STAGE_DESCRIPTION_SMALL}</SheetDescription>
+                </SheetHeader>
 
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Stage name</FormLabel>
-                  <FormControl>
-                    <Input placeholder='say "todo"' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormProvider {...form}>
+                    <fetcher.Form
+                        className="mt-2 space-y-4"
+                        method="POST"
+                        action="/api/stage/new"
+                        ref={formRef}
+                        onSubmit={form.handleSubmit(() => fetcher.submit(formRef.current))}
+                    >
+                        <input type="hidden" {...form.register("boardId")} readOnly/>
+                        <input type="hidden" {...form.register("nextOrder")} readOnly/>
 
-            <FormField
-              control={form.control}
-              name="theme"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="w-full">
-                    Choose a color to represent the stage
-                  </FormLabel>
-                  <FormControl>
-                    <ColorInput
-                      name={field.name}
-                      color={field.value}
-                      onColorChange={field.onChange}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel>Stage name</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder='say "todo"' {...field} />
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
 
-            <FormField
-              control={form.control}
-              name="isFinal"
-              render={({ field }) => (
-                <FormItem className="grid grid-cols-[44px_1fr] gap-2">
-                  <FormControl>
-                    <Switch
-                      name={field.name}
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <FormLabel className="w-full">Mark as final stage</FormLabel>
-                  <FormMessage className="col-span-2" />
-                </FormItem>
-              )}
-            />
+                        <FormField
+                            control={form.control}
+                            name="theme"
+                            render={({field}) => (
+                                <FormItem>
+                                    <FormLabel className="w-full">
+                                        Choose a color to represent the stage
+                                    </FormLabel>
+                                    <FormControl>
+                                        <ColorInput
+                                            name={field.name}
+                                            color={field.value}
+                                            onColorChange={field.onChange}
+                                        />
+                                    </FormControl>
+                                    <FormMessage/>
+                                </FormItem>
+                            )}
+                        />
 
-            <div className="w-full flex justify-end items-center mt-3 ml-auto gap-4">
-              {busy ? <LoadingIcon className="w-6 h-6" /> : null}
+                        <FormField
+                            control={form.control}
+                            name="isFinal"
+                            render={({field}) => (
+                                <FormItem className="grid grid-cols-[44px_1fr] gap-2">
+                                    <FormControl>
+                                        <Switch
+                                            name={field.name}
+                                            checked={field.value}
+                                            onCheckedChange={field.onChange}
+                                        />
+                                    </FormControl>
+                                    <FormLabel className="w-full">Mark as final stage</FormLabel>
+                                    <FormMessage className="col-span-2"/>
+                                </FormItem>
+                            )}
+                        />
 
-              <Button type="submit" size="sm" disabled={busy}>
-                Create
-              </Button>
-            </div>
-          </fetcher.Form>
-        </FormProvider>
-      </SheetContent>
-    </Sheet>
-  );
+                        <div className="w-full flex justify-end items-center mt-3 ml-auto gap-4">
+                            {busy ? <LoadingIcon className="w-6 h-6"/> : null}
+
+                            <Button type="submit" size="sm" disabled={busy}>
+                                Create
+                            </Button>
+                        </div>
+                    </fetcher.Form>
+                </FormProvider>
+            </SheetContent>
+        </Sheet>
+    );
 }

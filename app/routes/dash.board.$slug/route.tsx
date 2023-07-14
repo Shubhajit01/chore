@@ -5,9 +5,7 @@ import {
   redirect,
 } from "@remix-run/cloudflare";
 import { Outlet, useLoaderData } from "@remix-run/react";
-import { PlusIcon } from "lucide-react";
 import invariant from "tiny-invariant";
-import { Button } from "~/components/ui/button";
 import { TypographyH1 } from "~/components/ui/typography";
 import DATA from "~/constants/data";
 import getDB from "~/db";
@@ -57,17 +55,19 @@ export const meta: V2_MetaFunction = ({ data }) => {
 export default function BoardWithSlug() {
   const { summary } = useLoaderData<typeof loader>();
 
+  const { stages, name, id } = summary;
+
   return (
     <div className="mt-20 flex grow flex-col lg:mt-0 lg:overflow-auto lg:pl-4">
       <header className="fixed w-full flex justify-between items-center flex-wrap gap-2 py-2 px-6 lg:py-6 lg:sticky lg:inset-0 lg:z-[21] lg:gap-0 lg:px-8 lg:backdrop-blur">
         <div className="relative -ml-4 flex w-fit items-center truncate px-4 py-2 text-center ring-white/5 hover:ring-2 lg:text-left">
-          <TypographyH1>{summary.name}</TypographyH1>
+          <TypographyH1>{name}</TypographyH1>
         </div>
 
         <div className="flex items-center gap-4">
-          <NewStage boardId={summary.id} />
+          <NewStage boardId={id} />
           <NewTask
-            stateItems={summary.stages.map((state) => ({
+            stateItems={stages.map((state) => ({
               label: state.name,
               value: state.id,
             }))}
