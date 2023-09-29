@@ -1,10 +1,14 @@
-import { V2_MetaFunction } from "@remix-run/cloudflare";
+import { V2_MetaFunction, redirect } from "@remix-run/cloudflare";
 import DATA from "~/constants/data";
 
 export const meta: V2_MetaFunction = () => [
   { title: DATA.APP_TITLE },
   { name: "description", content: DATA.APP_DESCRIPTION },
 ];
+
+export function loader() {
+  throw redirect("/dash/board");
+}
 
 export default function Index() {
   return (

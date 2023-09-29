@@ -40,10 +40,10 @@ export default function DashRoute() {
             </li>
           ))}
 
-          <li className="mt-auto flex w-full flex-col gap-0.5 items-center text-rose-400">
+          {/* <li className="mt-auto flex w-full flex-col gap-0.5 items-center text-rose-400">
             <LogOutIcon className="w-6 h-6" />
             <small className="text-xs font-medium">Logout</small>
-          </li>
+          </li> */}
         </ul>
       </aside>
 
