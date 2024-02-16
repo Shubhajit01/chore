@@ -40,7 +40,7 @@ function BoardSheet() {
       >
         <ExpandSidebarIcon className="size-7" />
       </SheetTrigger>
-      <SheetContent side="left">
+      <SheetContent side="left" className="p-0">
         <BoardPanel />
       </SheetContent>
     </Sheet>
@@ -49,7 +49,7 @@ function BoardSheet() {
 
 function BoardPanel() {
   return (
-    <aside className="relative w-80 shrink-0 grow-0 border-r p-4 [--item-h:1.75rem] dark:border-none dark:bg-slate-950/20 lg:block lg:p-6">
+    <aside className="relative flex h-screen shrink-0 grow-0 flex-col overflow-hidden border-r p-6 [--item-h:1.75rem] dark:border-none dark:bg-slate-950/20 lg:block lg:w-80 lg:p-6">
       <h1 className="scroll-m-20 text-lg font-semibold tracking-tight">
         Boards
       </h1>
@@ -98,7 +98,7 @@ function BoardList() {
         {boards.length} of 10 boards used
       </p>
 
-      <ul className="-ml-3 mt-8 space-y-1.5" ref={parent}>
+      <ul className="-ml-3 mt-8 grow space-y-1.5 overflow-y-auto" ref={parent}>
         {boards.map((board) => (
           <li key={board.slug} className="dark:text-slate-300">
             <Link
