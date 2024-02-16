@@ -26,7 +26,7 @@ export const Route = createLazyFileRoute("/dashboard/boards/$slug")({
     return (
       <>
         <div className="flex grow flex-col gap-8 overflow-hidden px-8 pt-6">
-          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-10">
+          <div className="flex translate-x-12 flex-col gap-6 md:flex-row md:items-center md:justify-between md:gap-10 lg:translate-x-0">
             <EditableBoardHeading slug={board.slug} value={board.name} />
           </div>
 

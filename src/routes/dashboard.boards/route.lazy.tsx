@@ -1,33 +1,65 @@
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { useMediaQuery } from "@uidotdev/usehooks";
 import { Suspense } from "react";
 
+import ExclamationIcon from "~icons/heroicons/exclamation-triangle-solid";
+import ExpandSidebarIcon from "~icons/tabler/layout-sidebar-left-expand";
+
+import { queries } from "@/api/queries";
 import { NewBoard } from "@/components/dashboard/new-board";
 import { Skeleton } from "@/components/ui/skeleton";
 import { boardListItemId } from "@/lib/helpers";
 import { cn } from "@/lib/utils";
 
-import { queries } from "@/api/queries";
-import ExclamationIcon from "~icons/heroicons/exclamation-triangle-solid";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export const Route = createLazyFileRoute("/dashboard/boards")({
   component: memo(function DashboardBoards() {
     return (
       <>
-        <aside className="relative hidden w-80 shrink-0 grow-0 border-r p-6 [--item-h:1.75rem] dark:border-none dark:bg-slate-950/20 lg:block">
-          <h1 className="scroll-m-20 text-lg font-semibold tracking-tight">
-            Boards
-          </h1>
-
-          <Suspense fallback={<ListFallback />}>
-            <BoardList />
-          </Suspense>
-        </aside>
-
+        <ResponsiveBoardPanel />
         <Outlet />
       </>
     );
   }),
 });
+
+function ResponsiveBoardPanel() {
+  const hasSufficientWidth = useMediaQuery(
+    "only screen and (min-width: 1024px)",
+  );
+  return hasSufficientWidth ? <BoardPanel /> : <BoardSheet />;
+}
+
+function BoardSheet() {
+  return (
+    <Sheet>
+      <SheetTrigger
+        aria-label="Expand boards panel"
+        className="absolute left-4 top-9 self-start pl-4 sm:left-24"
+      >
+        <ExpandSidebarIcon className="size-7" />
+      </SheetTrigger>
+      <SheetContent side="left">
+        <BoardPanel />
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+function BoardPanel() {
+  return (
+    <aside className="relative w-80 shrink-0 grow-0 border-r p-4 [--item-h:1.75rem] dark:border-none dark:bg-slate-950/20 lg:block lg:p-6">
+      <h1 className="scroll-m-20 text-lg font-semibold tracking-tight">
+        Boards
+      </h1>
+
+      <Suspense fallback={<ListFallback />}>
+        <BoardList />
+      </Suspense>
+    </aside>
+  );
+}
 
 function ListFallback() {
   return (

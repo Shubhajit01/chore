@@ -26,7 +26,7 @@ const MENU_ITEMS = [
 
 export function DashboardNav() {
   return (
-    <nav className="flex h-20 shrink-0 grow-0 items-center justify-between border-t px-6 dark:border-slate-600 dark:bg-slate-950/50 sm:h-full sm:w-20 sm:flex-col sm:justify-start sm:border-r sm:!border-border sm:px-0 sm:py-6 sm:dark:border-0">
+    <nav className="flex h-20 shrink-0 grow-0 items-center justify-between border-t dark:border-slate-600 dark:bg-slate-950/50 sm:h-screen sm:w-20 sm:flex-col sm:justify-start sm:border-r sm:!border-border sm:px-0 sm:py-6 sm:dark:border-0">
       <Link
         to="/"
         className="hidden rounded-full bg-slate-950 p-2.5 dark:bg-transparent dark:p-0 sm:block"
