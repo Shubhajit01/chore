@@ -18,12 +18,19 @@ const MENU_ITEMS = [
     text: "Boards",
     activeIcon: BoardsIcon,
   },
-  { to: "/", icon: UserIcon, text: "Profile", activeIcon: UserIcon },
+  {
+    to: "/",
+    icon: UserIcon,
+    text: "Profile",
+    activeIcon: UserIcon,
+    disabled: true,
+  },
 ] satisfies {
   text: string;
   icon: SVGComponent;
   activeIcon: SVGComponent;
   to: ToPathOption<typeof routeTree>;
+  disabled?: boolean;
 }[];
 
 export function DashboardNav() {
@@ -56,18 +63,20 @@ export function DashboardNav() {
           <li key={menu.to} className="sm:w-full">
             <Link
               to={menu.to}
+              disabled={menu.disabled}
+              title={menu.disabled ? "Editing profile coming soon" : undefined}
               activeProps={{ className: "text-primary dark:text-slate-100" }}
               inactiveProps={{
                 className:
                   "text-slate-500 group transition-colors dark:text-slate-400",
               }}
-              className="flex w-full flex-col items-center gap-0.5 p-2"
+              className="flex w-full flex-col items-center gap-0.5 p-2 aria-disabled:cursor-not-allowed aria-disabled:opacity-60"
             >
               {({ isActive }) => {
                 const Icon = isActive ? menu.icon : menu.icon;
                 return (
                   <>
-                    <Icon className="size-6 group-hover:text-slate-900 dark:group-hover:text-slate-100" />
+                    <Icon className="size-6 group-hover:text-slate-900 group-aria-disabled:group-hover:!text-inherit dark:group-hover:text-slate-100" />
                     <small className="text-xs font-medium">{menu.text}</small>
                   </>
                 );
