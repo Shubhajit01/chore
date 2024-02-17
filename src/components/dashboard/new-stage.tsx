@@ -25,6 +25,8 @@ import PlusIcon from "~icons/heroicons/plus-20-solid";
 import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
 import { queries } from "@/api/queries";
+import { ToastIcon, toast } from "../ui/sonner";
+import CheckCircleIcon from "~icons/heroicons/check-circle-20-solid";
 
 type BoardMeta = {
   boardId: string;
@@ -105,6 +107,12 @@ function NewStageForm({
     },
     onSettled() {
       queryClient.invalidateQueries(queries.boards.slug(boardSlug));
+    },
+    onSuccess(_, { name }) {
+      toast("Board created", {
+        icon: <ToastIcon icon={CheckCircleIcon} type="success" />,
+        description: `The board "${name}" has been successfully created.`,
+      });
     },
   });
 

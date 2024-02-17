@@ -13,7 +13,10 @@ import { createTask } from "@/api/services/tasks";
 import { slugit } from "@/lib/utils";
 import { getRouteApi } from "@tanstack/react-router";
 import PlusIcon from "~icons/heroicons/plus-20-solid";
+import { toast } from "sonner";
 import { SelectData, TaskForm } from "./task-form";
+import CheckCircleIcon from "~icons/heroicons/check-circle-20-solid";
+import { ToastIcon } from "../ui/sonner";
 
 const api = getRouteApi("/dashboard/boards/$slug");
 
@@ -85,6 +88,12 @@ function NewTaskForm({
     },
     onSettled() {
       queryClient.invalidateQueries(queries.boards.slug(boardSlug));
+    },
+    onSuccess(_, { title }) {
+      toast("Task created", {
+        icon: <ToastIcon icon={CheckCircleIcon} type="success" />,
+        description: `The task "${title}" has been successfully created.`,
+      });
     },
   });
 

@@ -17,15 +17,18 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+import { queries } from "@/api/queries";
 import { createNewBoard } from "@/api/services/boards";
 import { slugit } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
+import CheckCircleIcon from "~icons/heroicons/check-circle-20-solid";
 import PlusIcon from "~icons/heroicons/plus-20-solid";
 import { Input } from "../ui/input";
-import { queries } from "@/api/queries";
+import { ToastIcon } from "../ui/sonner";
 
 export function NewBoard() {
   const [open, setOpen] = useState(false);
@@ -101,6 +104,12 @@ function NewBoardForm({ close }: { close: () => void }) {
       } else {
         queryClient.invalidateQueries(queries.boards.slug(slug));
       }
+    },
+    onSuccess(_, { name }) {
+      toast("Board created", {
+        icon: <ToastIcon icon={CheckCircleIcon} type="success" />,
+        description: `The board "${name}" has been successfully created.`,
+      });
     },
   });
 
