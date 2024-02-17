@@ -33,7 +33,7 @@ export function DashboardNav() {
       >
         <img
           className="size-5 object-contain dark:size-[30px]"
-          src="/images/icon-logo.svg"
+          src="/images/icon-logo-dark.svg"
           width="30"
           height="30"
         />

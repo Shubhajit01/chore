@@ -5,7 +5,7 @@ const client = new QueryClient();
 
 const router = createRouter({
   routeTree,
-  context: { queryClient: client },
+  context: { queryClient: client, session: null },
   defaultPreload: "intent",
 });
 

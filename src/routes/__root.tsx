@@ -9,7 +9,7 @@ import { client } from "@/api/client";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
-  session: Session;
+  session: Session | null;
 }>()({
   async beforeLoad() {
     const { data } = await client.auth.getSession();
