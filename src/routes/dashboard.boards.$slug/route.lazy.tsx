@@ -26,7 +26,7 @@ export const Route = createLazyFileRoute("/dashboard/boards/$slug")({
     return (
       <>
         <Helmet>
-          <title>{board.name}</title>
+          <title>{board?.name ?? "Board"}</title>
         </Helmet>
 
         <div className="flex grow flex-col gap-8 overflow-hidden px-8 pt-6">

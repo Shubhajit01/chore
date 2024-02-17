@@ -60,4 +60,15 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .bg-grid {
+    --light: theme("colors.slate.100 / 50");
+    --dark: rgba(255, 255, 255, 0.04);
+
+    --start: var(--light);
+    @apply bg-transparent dark:[--start:var(--dark)];
+    background-image: linear-gradient(var(--start) 2px, transparent 2px),
+      linear-gradient(to right, var(--start) 2px, transparent 2px);
+    background-size: 80px 80px;
+  }
 }

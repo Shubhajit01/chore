@@ -74,7 +74,7 @@ export const EditableBoardHeading = ({
   };
 
   let label = draft || value;
-  if (slug === variables?.slug) {
+  if (slug === variables?.slug && variables?.name) {
     label = variables.name;
   }
 
