@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 
-import million from "million/compiler";
 import icons from "unplugin-icons/vite";
 import imports from "unplugin-auto-import/vite";
 import paths from "vite-tsconfig-paths";
@@ -15,7 +14,6 @@ export default defineConfig({
   plugins: [
     react(),
     paths(),
-    million.vite({ auto: true }),
     imagetools(),
     icons({ compiler: "jsx", autoInstall: true, jsx: "react" }),
     imports({
