@@ -63,7 +63,7 @@
 
   .bg-grid {
     --light: theme("colors.slate.100 / 50");
-    --dark: rgba(255, 255, 255, 0.04);
+    --dark: rgba(255, 255, 255, 0.02);
 
     --start: var(--light);
     @apply bg-transparent dark:[--start:var(--dark)];
