@@ -17,6 +17,10 @@ export const Route = createLazyFileRoute("/dashboard/boards")({
   component: memo(function DashboardBoards() {
     return (
       <>
+        <Helmet>
+          <title>Boards</title>
+        </Helmet>
+
         <ResponsiveBoardPanel />
         <Outlet />
       </>

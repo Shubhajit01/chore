@@ -21,6 +21,7 @@ import { Route as DashboardBoardsSlugTaskTaskIdRouteImport } from './routes/dash
 
 // Create Virtual Routes
 
+const IndexLazyImport = createFileRoute('/')()
 const AuthLoginLazyImport = createFileRoute('/_auth/login')()
 const AuthJoinLazyImport = createFileRoute('/_auth/join')()
 
@@ -37,6 +38,11 @@ const DashboardRouteRoute = DashboardRouteImport.update({
 } as any).lazy(() =>
   import('./routes/dashboard/route.lazy').then((d) => d.Route),
 )
+
+const IndexLazyRoute = IndexLazyImport.update({
+  path: '/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
 const AuthLoginLazyRoute = AuthLoginLazyImport.update({
   path: '/login',
@@ -76,6 +82,10 @@ const DashboardBoardsSlugTaskTaskIdRouteRoute =
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      preLoaderRoute: typeof IndexLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/dashboard': {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRoute
@@ -110,6 +120,7 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
+  IndexLazyRoute,
   DashboardRouteRoute.addChildren([
     DashboardBoardsRouteRoute.addChildren([
       DashboardBoardsSlugRouteRoute.addChildren([

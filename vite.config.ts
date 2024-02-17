@@ -40,6 +40,10 @@ export default defineConfig({
             "createLazyFileRoute",
           ],
         },
+        {
+          from: "react-helmet-async",
+          imports: ["Helmet"],
+        },
       ],
     }),
     FontaineTransform.vite({

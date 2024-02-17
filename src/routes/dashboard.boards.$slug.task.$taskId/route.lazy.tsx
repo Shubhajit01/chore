@@ -89,28 +89,34 @@ export const Route = createLazyFileRoute(
     });
 
     return (
-      <Dialog
-        defaultOpen
-        onOpenChange={(isOpen) => {
-          if (!isOpen) {
-            close();
-          }
-        }}
-      >
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Edit task</DialogTitle>
-          </DialogHeader>
+      <>
+        <Helmet>
+          <title>{task.title}</title>
+        </Helmet>
 
-          <div className="mt-6">
-            <TaskForm
-              stages={stages}
-              defaultValues={task}
-              onSubmit={(values) => mutateAsync({ ...values, id: taskId })}
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
+        <Dialog
+          defaultOpen
+          onOpenChange={(isOpen) => {
+            if (!isOpen) {
+              close();
+            }
+          }}
+        >
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Edit task</DialogTitle>
+            </DialogHeader>
+
+            <div className="mt-6">
+              <TaskForm
+                stages={stages}
+                defaultValues={task}
+                onSubmit={(values) => mutateAsync({ ...values, id: taskId })}
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+      </>
     );
   }),
 });
