@@ -7,6 +7,8 @@ import UserIcon from "~icons/tabler/user-edit";
 
 import { Button } from "../ui/button";
 import { useLogout } from "@/hooks/use-logout";
+import ThemeSwitcher from "../shared/theme-switcher";
+import HomeIcon from "~icons/tabler/home";
 
 const MENU_ITEMS = [
   // { to: "/dashboard", icon: HomeIcon, text: "Overview" },
@@ -39,7 +41,17 @@ export function DashboardNav() {
         />
       </Link>
 
-      <ul className="flex grow items-center justify-around gap-2 sm:mt-12 sm:flex-col sm:justify-start">
+      <ul className="flex grow items-center justify-around gap-4 sm:mt-12 sm:flex-col sm:justify-start">
+        <li className="sm:hidden">
+          <Link
+            to="/"
+            className="flex w-full flex-col items-center gap-0.5 p-2"
+          >
+            <HomeIcon className="size-6" />
+            <small className="text-xs font-medium">Home</small>
+          </Link>
+        </li>
+
         {MENU_ITEMS.map((menu) => (
           <li key={menu.to} className="sm:w-full">
             <Link
@@ -64,7 +76,13 @@ export function DashboardNav() {
           </li>
         ))}
 
-        <li className="sm:mt-auto">
+        <li className="order-last flex flex-col items-center gap-0.5 sm:order-none sm:mt-auto">
+          <ThemeSwitcher className="h-auto border-0 sm:h-10 sm:border" />
+
+          <small className="text-xs font-medium sm:hidden">Theme</small>
+        </li>
+
+        <li>
           <LogoutButton />
         </li>
       </ul>

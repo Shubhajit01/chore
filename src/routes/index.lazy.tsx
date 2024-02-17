@@ -3,6 +3,7 @@ import { getRouteApi } from "@tanstack/react-router";
 
 // @ts-expect-error Image directive import
 import heroImage from "@/assets/snap.png?format=webp&quality=100";
+import ThemeSwitcher from "@/components/shared/theme-switcher";
 
 const api = getRouteApi("/");
 
@@ -74,6 +75,10 @@ export const Route = createLazyFileRoute("/")({
             </div>
           </section>
         </main>
+
+        <aside className="fixed right-10 top-10">
+          <ThemeSwitcher />
+        </aside>
       </>
     );
   },

@@ -1,3 +1,4 @@
+import ThemeSwitcher from "@/components/shared/theme-switcher";
 import { redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_auth")({
@@ -8,5 +9,15 @@ export const Route = createFileRoute("/_auth")({
         replace: true,
       });
     }
+  },
+  component: function AuthLayout() {
+    return (
+      <>
+        <Outlet />
+        <aside className="fixed right-10 top-10">
+          <ThemeSwitcher />
+        </aside>
+      </>
+    );
   },
 });

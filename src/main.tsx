@@ -5,6 +5,9 @@ import App from "./app.tsx";
 import "./styles/font.css";
 import "./styles/index.css";
 
+// useDarkMode tries to access global
+window.global = globalThis;
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <App />
