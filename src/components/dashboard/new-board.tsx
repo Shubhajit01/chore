@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button, ButtonProps } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -30,19 +30,27 @@ import PlusIcon from "~icons/heroicons/plus-20-solid";
 import { Input } from "../ui/input";
 import { ToastIcon } from "../ui/sonner";
 
-export function NewBoard() {
+export function NewBoard({
+  label = "Create another board",
+  variant = "outline",
+  size = "sm",
+}: {
+  label?: string;
+  variant?: ButtonProps["variant"];
+  size?: ButtonProps["size"];
+}) {
   const [open, setOpen] = useState(false);
 
   return (
     <Dialog modal open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          variant="outline"
-          size="sm"
+          variant={variant}
+          size={size}
           className="!mt-4 flex items-center gap-1"
         >
           <PlusIcon className="size-5" />
-          Add another board
+          {label}
         </Button>
       </DialogTrigger>
       <DialogContent>

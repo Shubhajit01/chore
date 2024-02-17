@@ -1,5 +1,5 @@
 // @ts-expect-error Image directives
-import notFoundImage from "@/assets/lost.png?format=webp&w=160&h=160";
+import notFoundImage from "@/assets/lost.png?format=webp&w=120&h=120";
 
 import { Button } from "../ui/button";
 import ThemeSwitcher from "./theme-switcher";
@@ -16,16 +16,16 @@ export default function NotFound() {
           <div className="absolute inset-0 scale-150 rounded-full bg-sky-500 opacity-20 blur-2xl dark:opacity-40" />
           <img
             src={notFoundImage}
-            width={160}
-            height={160}
-            className="relative size-40"
+            width={120}
+            height={120}
+            className="relative size-[120px]"
             alt="not found illustration"
           />
         </div>
 
         <div className="mt-12 max-w-xl space-y-6 text-center">
           <h1>
-            <p className="text-2xl font-semibold tracking-tight md:text-3xl">
+            <p className="text-2xl font-semibold tracking-tight text-muted-foreground md:text-3xl">
               You seem to be lost.
             </p>
             <p className="mt-3 text-balance text-3xl font-bold tracking-tight md:text-4xl">

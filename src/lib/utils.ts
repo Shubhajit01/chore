@@ -21,3 +21,7 @@ export function slugit(str: string) {
   )();
   return `${slug.slice(0, 12)}-${hash}`;
 }
+
+export function canCreateBoard(currentBoardsLength: number) {
+  return currentBoardsLength < 10;
+}

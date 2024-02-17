@@ -9,7 +9,7 @@ import { queries } from "@/api/queries";
 import { NewBoard } from "@/components/dashboard/new-board";
 import { Skeleton } from "@/components/ui/skeleton";
 import { boardListItemId } from "@/lib/helpers";
-import { cn } from "@/lib/utils";
+import { canCreateBoard, cn } from "@/lib/utils";
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
@@ -85,7 +85,7 @@ function BoardList() {
   const [parent] = useAutoAnimate();
   const { data: boards } = useSuspenseQuery(queries.boards.all());
 
-  const canCreateNewBoard = boards.length < 10;
+  const isAllowedToCreateBoard = canCreateBoard(boards.length);
 
   return (
     <>
@@ -125,7 +125,7 @@ function BoardList() {
         ))}
       </ul>
 
-      {canCreateNewBoard ? (
+      {isAllowedToCreateBoard ? (
         <>
           <NewBoard />
         </>
