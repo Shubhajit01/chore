@@ -134,7 +134,7 @@ function BoardList() {
           role="alert"
           className="!mt-4 flex w-full gap-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm font-medium text-amber-600 dark:border-yellow-800/40 dark:bg-yellow-800/10 dark:text-yellow-300"
         >
-          <div className="w-10 rounded-full bg-amber-100 p-2 dark:bg-yellow-50/5">
+          <div className="h-10 w-10 rounded-full bg-amber-100 p-2 dark:bg-yellow-50/5">
             <ExclamationIcon className="size-6 shrink-0" />
           </div>
           <span>You have reached maximum allowed boards.</span>
