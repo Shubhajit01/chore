@@ -36,15 +36,25 @@ function ResponsiveBoardPanel() {
 }
 
 function BoardSheet() {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger
         aria-label="Expand boards panel"
         className="absolute left-4 top-9 z-10 self-start pl-4 sm:left-24"
       >
         <ExpandSidebarIcon className="size-7" />
       </SheetTrigger>
-      <SheetContent side="left" className="p-0">
+      <SheetContent
+        side="left"
+        className="p-0"
+        onClick={(e) => {
+          if (e.target instanceof HTMLAnchorElement) {
+            setOpen(false);
+          }
+        }}
+      >
         <BoardPanel />
       </SheetContent>
     </Sheet>
