@@ -109,9 +109,9 @@ function NewStageForm({
       queryClient.invalidateQueries(queries.boards.slug(boardSlug));
     },
     onSuccess(_, { name }) {
-      toast("Board created", {
+      toast("Stage created", {
         icon: <ToastIcon icon={CheckCircleIcon} type="success" />,
-        description: `The board "${name}" has been successfully created.`,
+        description: `The stage "${name}" has been successfully created.`,
       });
     },
   });

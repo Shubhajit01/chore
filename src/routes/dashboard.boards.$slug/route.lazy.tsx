@@ -49,9 +49,9 @@ export const Route = createLazyFileRoute("/dashboard/boards/$slug")({
           <div className="h-full overflow-auto">
             {board.stages.length ? (
               <BoardLaneZone columnLength={board.stages.length}>
-                {board.stages.map((stage) => (
+                {board.stages.map((stage, index) => (
                   <BoardLane
-                    key={stage.name}
+                    key={`${board.slug}#${stage.name}#${index}`}
                     name={stage.name}
                     stageId={stage.id}
                     boardSlug={board.slug}
