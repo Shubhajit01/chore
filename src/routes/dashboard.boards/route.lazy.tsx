@@ -40,7 +40,7 @@ function BoardSheet() {
     <Sheet>
       <SheetTrigger
         aria-label="Expand boards panel"
-        className="absolute left-4 top-9 self-start pl-4 sm:left-24"
+        className="absolute left-4 top-9 z-10 self-start pl-4 sm:left-24"
       >
         <ExpandSidebarIcon className="size-7" />
       </SheetTrigger>
