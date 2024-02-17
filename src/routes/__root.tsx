@@ -3,12 +3,10 @@ import {
   ScrollRestoration,
   createRootRouteWithContext,
 } from "@tanstack/react-router";
-import { Helmet, HelmetProvider } from "react-helmet-async";
 
 import type { QueryClient } from "@tanstack/react-query";
 
 import { client } from "@/api/client";
-import { APP_CONFIG } from "@/constants/config";
 import { Toaster } from "@/components/ui/sonner";
 
 const NotFound = lazy(() => import("@/components/shared/not-found"));
@@ -23,12 +21,11 @@ export const Route = createRootRouteWithContext<{
   },
   component: function RootComponent() {
     return (
-      <HelmetProvider>
-        <Helmet titleTemplate={`%s | ${APP_CONFIG.title}`} />
+      <>
         <Outlet />
         <ScrollRestoration />
         <Toaster />
-      </HelmetProvider>
+      </>
     );
   },
   wrapInSuspense: true,

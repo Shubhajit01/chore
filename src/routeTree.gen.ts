@@ -15,6 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as DashboardRouteImport } from './routes/dashboard/route'
+import { Route as DashboardIndexImport } from './routes/dashboard.index'
 import { Route as DashboardBoardsRouteImport } from './routes/dashboard.boards/route'
 import { Route as DashboardBoardsSlugRouteImport } from './routes/dashboard.boards.$slug/route'
 import { Route as DashboardBoardsSlugTaskTaskIdRouteImport } from './routes/dashboard.boards.$slug.task.$taskId/route'
@@ -43,6 +44,11 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const DashboardIndexRoute = DashboardIndexImport.update({
+  path: '/',
+  getParentRoute: () => DashboardRouteRoute,
+} as any)
 
 const AuthLoginLazyRoute = AuthLoginLazyImport.update({
   path: '/login',
@@ -106,6 +112,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginLazyImport
       parentRoute: typeof AuthImport
     }
+    '/dashboard/': {
+      preLoaderRoute: typeof DashboardIndexImport
+      parentRoute: typeof DashboardRouteImport
+    }
     '/dashboard/boards/$slug': {
       preLoaderRoute: typeof DashboardBoardsSlugRouteImport
       parentRoute: typeof DashboardBoardsRouteImport
@@ -127,6 +137,7 @@ export const routeTree = rootRoute.addChildren([
         DashboardBoardsSlugTaskTaskIdRouteRoute,
       ]),
     ]),
+    DashboardIndexRoute,
   ]),
   AuthRoute.addChildren([AuthJoinLazyRoute, AuthLoginLazyRoute]),
 ])
