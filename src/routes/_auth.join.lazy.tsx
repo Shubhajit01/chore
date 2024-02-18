@@ -83,7 +83,7 @@ export const Route = createLazyFileRoute("/_auth/join")({
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input type="email" {...field} />
+                          <Input autoFocus type="email" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
