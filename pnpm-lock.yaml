@@ -109,6 +109,9 @@ devDependencies:
   '@iconify-json/line-md':
     specifier: ^1.1.36
     version: 1.1.36
+  '@iconify-json/logos':
+    specifier: ^1.1.37
+    version: 1.1.37
   '@iconify-json/mdi':
     specifier: ^1.1.64
     version: 1.1.64
@@ -1980,6 +1983,12 @@ packages:
 
   /@iconify-json/line-md@1.1.36:
     resolution: {integrity: sha512-DzZQm0qSEtjixdbTSX4+PvTPHWwYJrZFvOWITMkLG12XIEzDUpIRMcZ0bUhegU0qDIM5c6X2FKHCgjhK4fI7NA==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: true
+
+  /@iconify-json/logos@1.1.37:
+    resolution: {integrity: sha512-H2S8frTEznk6paX2kMzeUGn4KSiykghvO0b8UvEDd1fFFzt0WxCXpP1tBv67XaWK99e6JgA34hhv4lRGAm1hJg==}
     dependencies:
       '@iconify/types': 2.0.0
     dev: true

@@ -5,6 +5,8 @@ import { getRouteApi } from "@tanstack/react-router";
 import heroImage from "@/assets/snap.png?format=webp&quality=100";
 import ThemeSwitcher from "@/components/shared/theme-switcher";
 
+import GithubIcon from "~icons/radix-icons/github-logo";
+
 const api = getRouteApi("/");
 
 export const Route = createLazyFileRoute("/")({
@@ -12,7 +14,7 @@ export const Route = createLazyFileRoute("/")({
     const { session } = api.useRouteContext();
 
     return (
-      <>
+      <div className="flex flex-col">
         <Helmet>
           <title>Home</title>
         </Helmet>
@@ -79,7 +81,21 @@ export const Route = createLazyFileRoute("/")({
         <aside className="fixed right-10 top-10">
           <ThemeSwitcher />
         </aside>
-      </>
+
+        <div className="order-first mt-12 pl-12 lg:mt-0 lg:px-0">
+          <a
+            href="https://github.com/Shubhajit01/chore"
+            target="_blank"
+            className="relative flex w-fit cursor-pointer items-center justify-center gap-2 rounded-full border border-input bg-secondary px-4 py-2 text-sm font-semibold shadow-sm transition-colors hover:bg-secondary/50 lg:fixed lg:bottom-8 lg:left-2/4 lg:-translate-x-2/4"
+          >
+            <div className="absolute -top-px left-2.5 h-px w-3/4 bg-gradient-to-r from-transparent via-primary to-transparent" />
+            <div className="absolute -bottom-px right-2.5 h-px w-2/4 bg-gradient-to-r from-transparent via-primary to-transparent" />
+
+            <GithubIcon className="size-5" />
+            <span>View on Github</span>
+          </a>
+        </div>
+      </div>
     );
   },
 });
