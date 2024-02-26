@@ -96,6 +96,9 @@ function BoardList() {
   const { data: boards } = useSuspenseQuery(queries.boards.all());
 
   const isAllowedToCreateBoard = canCreateBoard(boards.length);
+  const newBoardLabel = boards.length
+    ? "Create another board"
+    : "Create a board";
 
   return (
     <>
@@ -137,7 +140,7 @@ function BoardList() {
 
       {isAllowedToCreateBoard ? (
         <>
-          <NewBoard />
+          <NewBoard label={newBoardLabel} />
         </>
       ) : (
         <div

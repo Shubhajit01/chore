@@ -17,8 +17,11 @@ export async function signIn(creds: SignInWithPasswordCredentials) {
 export async function signup(creds: SignUpWithPasswordCredentials) {
   const { data, error } = await client.auth.signUp(creds);
   if (error) {
-    console.log("join", error);
-    throw new Error(error.message);
+    const message =
+      error.status === 429
+        ? "There was some error while creating the account. Please try again after some time or login as guest."
+        : error.message;
+    throw new Error(message);
   }
   return data;
 }

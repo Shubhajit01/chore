@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "@tanstack/react-router";
+import { MISC_CONFIG } from "@/constants/misc";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -42,6 +43,13 @@ export const Route = createLazyFileRoute("/_auth/login")({
         });
       },
     });
+
+    const loginAsGuest = () => {
+      mutate({
+        email: MISC_CONFIG.GUEST.email,
+        password: MISC_CONFIG.GUEST.password,
+      });
+    };
 
     return (
       <>
@@ -83,7 +91,12 @@ export const Route = createLazyFileRoute("/_auth/login")({
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input autoFocus type="email" {...field} />
+                          <Input
+                            autoFocus
+                            type="email"
+                            {...field}
+                            disabled={isPending}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -97,7 +110,11 @@ export const Route = createLazyFileRoute("/_auth/login")({
                       <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                          <Input type="password" {...field} />
+                          <Input
+                            type="password"
+                            {...field}
+                            disabled={isPending}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -106,6 +123,16 @@ export const Route = createLazyFileRoute("/_auth/login")({
 
                   <Button type="submit" disabled={isPending} className="w-full">
                     Submit
+                  </Button>
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={loginAsGuest}
+                    disabled={isPending}
+                  >
+                    Login as guest
                   </Button>
                 </form>
               </Form>

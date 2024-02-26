@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { signup } from "@/api/services/auth";
+import { signIn, signup } from "@/api/services/auth";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,6 +14,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "@tanstack/react-router";
+import { ToastIcon, toast } from "@/components/ui/sonner";
+
+import CheckCircleIcon from "~icons/heroicons/check-circle-20-solid";
+import ExclamationIcon from "~icons/heroicons/exclamation-triangle-solid";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { MISC_CONFIG } from "@/constants/misc";
 
 const registerSchema = z.object({
   email: z.string().email(),
@@ -33,15 +39,34 @@ export const Route = createLazyFileRoute("/_auth/join")({
     });
 
     const navigate = useNavigate();
+    const [parent] = useAutoAnimate();
 
-    const { mutate, isPending } = useMutation({
+    const { mutate, isPending, error } = useMutation({
       mutationFn: signup,
       onSuccess() {
+        toast("Account Successfully Created", {
+          icon: <ToastIcon icon={CheckCircleIcon} type="success" />,
+          description: "Your account creation is complete.",
+        });
+
         navigate({
           to: "/login",
         });
       },
     });
+
+    const loginAsGuest = async () => {
+      try {
+        await signIn({
+          ...MISC_CONFIG.GUEST,
+        });
+        navigate({
+          to: "/dashboard/boards",
+        });
+      } catch {
+        /* empty */
+      }
+    };
 
     return (
       <>
@@ -71,11 +96,37 @@ export const Route = createLazyFileRoute("/_auth/join")({
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md">
               <Form {...form}>
                 <form
+                  ref={parent}
                   className="space-y-6"
                   onSubmit={form.handleSubmit((values) => {
                     return mutate(values);
                   })}
                 >
+                  {error ? (
+                    <div
+                      role="alert"
+                      className="!mt-4 flex w-full gap-3 rounded-md border border-rose-200 bg-rose-50 p-3 text-sm font-medium text-rose-600 dark:border-rose-800/40 dark:bg-rose-800/10 dark:text-rose-300"
+                    >
+                      <div className="h-10 w-10 rounded-full bg-rose-100 p-2 dark:bg-yellow-50/5">
+                        <ExclamationIcon className="size-6 shrink-0" />
+                      </div>
+                      <div>
+                        <p>{error.message}</p>
+                        <p>
+                          Please try again. If the issue persists -{" "}
+                          <Button
+                            variant="link"
+                            asChild
+                            className="h-auto p-0"
+                            onClick={loginAsGuest}
+                          >
+                            <span>Login as guest</span>
+                          </Button>
+                        </p>
+                      </div>
+                    </div>
+                  ) : null}
+
                   <FormField
                     control={form.control}
                     name="email"
